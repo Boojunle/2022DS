@@ -3,13 +3,13 @@ var readline = require("readline-sync");
 //Generate 4 digit randomly
 var Ans=[0,1,2,3,4]; //permutation
 for(var i=0;i<=4;i++){
-  var rand = Math.floor(Math.random()*5);
+  var rand = Math.floor(Math.random()*4);
   //swap i, rand
   var temp= Ans[i];
   Ans[i] = Ans[rand];
   Ans[rand] = temp;
 }
-var gCount=10;
+var gCount=4;
 do{
   do{
     var G=readline.questionInt("Please input 4 digits? ");
