@@ -27,6 +27,6 @@ var dynaAry2d=[];
 for(var _row=0;_row<row;_row++){
     dynaAry2d.push([]);
     for(var _col=0;_col<col;_col++){
-        dynaAry2d[_row].push(_col);
+        dynaAry2d[_row].push(_col*1+_row);
     }
 }
