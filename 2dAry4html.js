@@ -1,9 +1,9 @@
 var ary2d=[
-    [1,1,1,0,1], //index 0
-    [1,0,1,1,0], //index 1
-    [1,1,0,1,0], //index 2
-    [1,0,1,1,0], //index 3
-    [1,1,1,0,1]   //index 4
+    [1,1,1,0,1,1], //index 0
+    [1,0,1,1,0,1], //index 1
+    [1,1,0,1,0,1], //index 2
+    [1,0,1,1,0,1], //index 3
+    [1,1,1,0,1,1]   //index 4
 ];
 
 var row=ary2d.length;
@@ -21,7 +21,7 @@ for(var _row=0;_row<row;_row++){
             canvas.fillStyle="#80F762"
         }
         //600/5=>120  coordinate, width, heigth
-        canvas.fillRect(_row*120,_col*120,120,120);
-        canvas.strokeRect(_row*120,_col*120,120,120);
+        canvas.fillRect(_col*100,_row*100,100,100);//col=x,row=y,width,height
+        canvas.strokeRect(_col*100,_row*100,100,100);
     }
 }
