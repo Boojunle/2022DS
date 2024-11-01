@@ -1,5 +1,23 @@
 const Live = 1;  // 定义表示“活细胞”的常量
 const Dead = 0;  // 定义表示“死细胞”的常量
+Life.prototype.createMap = createMap;
+// // 创建地图方法，用于显示细胞状态
+// createMap = function() {
+//     var map = '';
+//     for (let _row = 0; _row < this.row; _row++) {
+//         for (let _col = 0; _col < this.col; _col++) {
+//             if (this.grid[_row][_col] == Live) {
+//                 map += 'O ';  // 活细胞用 'O' 表示
+//             } else {
+//                 map += '. ';  // 死细胞用 '.' 表示
+//             }
+//         }
+//         map += '\n';  // 换行
+//     }
+//     console.log(map);  // 打印地图
+// }
+
+// // 在 Life 类中添加 createMap 方法
 
 class Life {
     constructor(_row, _col) {
