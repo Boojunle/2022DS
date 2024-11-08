@@ -1,78 +1,160 @@
-const Live = 1;  // 定义表示“活细胞”的常量
-const Dead = 0;  // 定义表示“死细胞”的常量
 
-class Life {
-    constructor(_row, _col) {
-        this.row = _row;    // 存储行数
-        this.col = _col;    // 存储列数
-        this.grid = [];     // 创建一个用于保存细胞状态的二维数组
+const Live = 1;
+const Dead = 0;
+
+class Life{
+   constructor(_row, _col){
+        this.row = _row;
+        this.col = _col;
+        this.grid=[];//new Array()
+        //2d array
+        for(var _row=0;_row < this.row;_row++){
+            this.grid.push([]);
+            for(var _col=0;_col < this.col;_col++){
+                this.grid[_row].push(Dead);
+            }
+        }
         
-        // 初始化二维数组，每个元素初始化为 Dead（0）
-        for (var _row = 0; _row < this.row; _row++) {
-            this.grid.push([]);   // 在grid中添加一行
-            for (var _col = 0; _col < this.col; _col++) {
-                this.grid[_row].push(Dead);  // 每行的每个单元格初始状态为 Dead
+    }
+    initialize = function(random){
+        if(random == true){
+            for(var _row=0;_row < this.row;_row++){
+                for(var _col=0;_col < this.col;_col++){
+                    this.grid[_row][_col] = (Math.random()<0.1) ? Live : Dead;
+                }
+            }
+        }else{
+            this.grid[1][1] = Live;
+            this.grid[1][2] = this.grid[1][3] = this.grid[1][4] =Live; 
+        }
+    }
+
+    update = function(){
+          var nextGrid = JSON.parse(JSON.stringify(this.grid));
+          //travse all elements, count its neighbor
+          var neighbor;
+          for (let _row = 0; _row < this.row; _row++) {
+            for (let _col = 0; _col < this.row; _col++) {
+                neighbor = this.neighborCount(_row, _col);
+                // update by 4 rules
+                if(this.getStatusAt(_row,_col)==Live && (neighbor<=1 || neighbor>=4)){
+                    nextGrid[_row][_col] = Dead;
+                }
+                if(this.getStatusAt(_row,_col)==Dead && neighbor==3){
+                    nextGrid[_row][_col] = Live;
+                }
+
+            }
+            
+          }
+
+          this.grid = null;
+          this.grid = nextGrid;
+    } 
+
+
+    neighborCount = function(row, col){
+        var count=0;
+        count += this.getStatusAt(row-1, col-1);
+        count += this.getStatusAt(row-1, col); 
+        count += this.getStatusAt(row-1, col+1); 
+        
+        count += this.getStatusAt(row, col-1);
+
+        count += this.getStatusAt(row, col+1); 
+        
+        count += this.getStatusAt(row+1, col-1); 
+        count += this.getStatusAt(row+1, col); 
+        count += this.getStatusAt(row+1, col+1);      
+        return count;   
+    }
+    getStatusAt = function(row, col){
+        if(row<0 || col<0 || row >= this.row || col >= this.col){
+           return Dead;
+        }else{
+            return this.grid[row][col];
+        }
+    }
+
+    draw = function(_canvas){
+        var canvas = document.getElementById(_canvas).getContext("2d");
+        this.size=Math.min(canvas.canvas.height/this.row, canvas.canvas.width/this.col);
+        for(var _row=0;_row<this.row;_row++){
+            for(var _col=0;_col<this.col;_col++){
+                //ar2d[_row][_col]=>0,1
+                if(this.grid[_row][_col]==Live){
+                    canvas.fillStyle="#ff0000"
+                }else{
+                    canvas.fillStyle="#ffffff"
+                }
+                //600/5=>120  coordinate x,y , width, heigth
+                canvas.fillRect(_col*this.size,_row*this.size,this.size,this.size);
+                canvas.strokeRect(_col*this.size,_row*this.size,this.size,this.size);
             }
         }
     }
-
-    // 初始化方法，用于设置特定位置的细胞为 Live
-    initialize = function() {
-        this.grid[1][1] = Live;        // 设置坐标 (1,1) 为活细胞
-        this.grid[1][2] = this.grid[1][3] = this.grid[1][4] = Live; // 设置坐标 (1,2), (1,3), (1,4) 为活细胞
-    }
-
-    // 更新方法，计算下一代细胞状态
-    update = function() {
-        var nextGrid = JSON.parse(JSON.stringify(this.grid));  // 复制当前状态网格，以存储下一代的状态
-        var neighbor;   // 用于存储邻居活细胞数量
-        
-        // 遍历所有细胞，计算每个细胞的邻居数量
-        for (let _row = 0; _row < this.row; _row++) {
-            for (let _col = 0; _col < this.col; _col++) {
-                neighbor = this.neighborCount(_row, _col);  // 计算邻居活细胞的数量
-                
-                // 根据细胞生存规则更新细胞状态
-                if (this.getStatusAt(_row, _col) == Live && (neighbor <= 1 || neighbor >= 4)) {
-                    nextGrid[_row][_col] = Dead;  // 如果活细胞邻居小于等于1或大于等于4，则死亡
-                }
-                if (this.getStatusAt(_row, _col) == Dead && neighbor == 3) {
-                    nextGrid[_row][_col] = Live;  // 如果死细胞有3个邻居活细胞，则复活
-                }
-            }
+    drawPoint = function(_canvas,_row,_col){
+        var canvas = document.getElementById(_canvas).getContext("2d");
+        //this.size=Math.min(canvas.canvas.height/this.row, canvas.canvas.width/this.col);
+        if(this.grid[_row][_col]==Live){
+            canvas.fillStyle="#ff0000"
+        }else{
+            canvas.fillStyle="#ffffff"
         }
-
-        // 更新当前网格为下一代状态
-        this.grid = nextGrid;
-    }
-
-    // 计算给定细胞的邻居活细胞数量
-    neighborCount = function(row, col) {
-        var count = 0;
-        count += this.getStatusAt(row - 1, col - 1);  // 左上
-        count += this.getStatusAt(row - 1, col);      // 上
-        count += this.getStatusAt(row - 1, col + 1);  // 右上
-        count += this.getStatusAt(row, col - 1);      // 左
-        count += this.getStatusAt(row, col + 1);      // 右
-        count += this.getStatusAt(row + 1, col - 1);  // 左下
-        count += this.getStatusAt(row + 1, col);      // 下
-        count += this.getStatusAt(row + 1, col + 1);  // 右下
-        return count;   // 返回活细胞数量
-    }
-
-    // 获取指定位置的细胞状态，超出边界返回 Dead
-    getStatusAt = function(row, col) {
-        if (row < 0 || col < 0 || row >= this.row || col >= this.col) {
-           return Dead;  // 超出边界返回 Dead
-        } else {
-            return this.grid[row][col];  // 返回当前状态
-        }
+        canvas.fillRect(_col*this.size,_row*this.size,this.size,this.size);
+        canvas.strokeRect(_col*this.size,_row*this.size,this.size,this.size);
     }
 }
 
-// 创建两个不同大小的Life实例
-var myGame = new Life(10, 10);  // 10x10 网格
-var myGame2 = new Life(100, 100);  // 100x100 网格
 
-myGame.initialize();  // 初始化 myGame 网格
-myGame.update();  // 更新 myGame 网格状态至下一代
+
+// Life.prototype.update= function(){
+
+// }
+
+function tonext(){
+    myGame.update();
+    myGame.draw("map")
+}
+
+function mouseClick(event){
+   var _row = Math.floor(event.offsetY/myGame.size);
+   var _col = Math.floor(event.offsetX/myGame.size);
+//    if(myGame.getStatusAt(_row,_col)==Live){
+//     myGame.grid[_row][_col]=Dead;
+//    }else{
+//     myGame.grid[_row][_col]=Live;
+//    }
+
+   //myGame.grid[_row][_col] = (myGame.getStatusAt(_row,_col)==Live) ? Dead : Live;
+
+   myGame.grid[_row][_col] = Number(!myGame.getStatusAt(_row,_col)); 
+
+
+   //    if() else ...
+//    ()? :
+   myGame.drawPoint("map",_row,_col);
+}
+
+function random(){
+   myGame.initialize(true);
+   myGame.draw("map");
+}
+
+var myTime;
+function run(){
+   var step = document.getElementById("step").value;
+   myTime = setInterval(tonext, Number(step));
+}
+function stop(){
+    clearInterval(myTime);
+}
+
+
+var myGame = new Life(100,100);
+var myGame2 = new Life(100,100);
+
+myGame.initialize();
+myGame.draw("map")
+
+var runnng = setTimeout(tonext, 1000);
