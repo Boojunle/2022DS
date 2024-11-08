@@ -20,7 +20,7 @@ class Life {
 
     // 更新方法，计算下一代状态
     update = function() {
-        const nextGrid = this.grid.map(row => [...row]);  // 使用 map 创建浅拷贝，替代 JSON 深拷贝
+        const nextGrid = this.grid.map(row => [...row]);  // 使用 map 创建浅copy，替代 JSON 深copy
         let neighborCount;
 
         for (let _row = 0; _row < this.row; _row++) {
