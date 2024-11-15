@@ -52,6 +52,6 @@ function bracketMatch(inputString) {
         return 'matched'; // 所有括号都匹配
     }
     console.log(bracketMatch("{{[()]}")); // matched
-    console.log(bracketMatch("{{[()]}")); // unmatched
-    console.log(bracketMatch("{{[()]}")); // unmatched
+    console.log(bracketMatch("{{[()]}")); // unmatched  
+
 }
