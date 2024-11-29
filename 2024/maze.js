@@ -83,9 +83,10 @@ function go() {
     }
     if(Stack.length==0)
        console.log("No solution!"); // 無解
-    else
+    else{
     console.log("Done!"); // 完成
     drawPath(Stack);
+}
 }
 function drawPath(_stack) {
     _stack.forEach(item => {
